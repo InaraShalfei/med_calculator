@@ -2,9 +2,11 @@ from django.db import models
 
 
 class NormalParameter(models.Model):
-    name = models.CharField(max_length=250, verbose_name='показатель')
-    low_limit = models.IntegerField(verbose_name='нижний предел нормы')
-    high_limit = models.IntegerField(verbose_name='верхний предел нормы')
+    name = models.CharField(max_length=250, verbose_name='название показателя')
+    title = models.CharField(blank=True, null=True, max_length=250, verbose_name='описание показателя')
+    low_limit = models.FloatField(verbose_name='нижний предел нормы')
+    high_limit = models.FloatField(verbose_name='верхний предел нормы')
+    measure_unit = models.CharField(max_length=10, blank=True, null=True, verbose_name='ед. изм-я')
 
     class Meta:
         verbose_name = 'Показатель нормы'
@@ -14,40 +16,30 @@ class NormalParameter(models.Model):
         return self.name
 
 
-class Patient(models.Model):
+class Examination(models.Model):
     full_name = models.CharField(max_length=250, verbose_name='ФИО пациента')
-
-    class Meta:
-        verbose_name = 'Пациент'
-        verbose_name_plural = 'Пациенты'
-
-    def __str__(self):
-        return self.full_name
-
-
-class Analysis(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, verbose_name='пациент', related_name='analyses')
-    date_of_analysis = models.DateField(verbose_name='дата анализа')
+    diagnosis = models.CharField(max_length=250, blank=True, null=True, verbose_name='диагноз')
+    diagnosis_date = models.DateField(auto_now=True, verbose_name='дата диагноза')
+    RBC = models.FloatField(verbose_name='уровень эритроцитов')
+    HGB = models.FloatField(verbose_name='уровень гемоглобина')
+    HCT = models.FloatField(verbose_name='гематокрит')
+    MCV = models.FloatField(verbose_name='средн. объем эритроцита')
+    MCH = models.FloatField(verbose_name='средн. эритроцитарный гемоглобин')
+    MCHC = models.FloatField(verbose_name='средн. концентрация гемоглобина в эритроците')
+    RDW_CV = models.FloatField(verbose_name='распределение эритроцитов по объёму, КВ')
+    RDW_SD = models.FloatField(verbose_name='распределение эритроцитов по объёму, СКВ')
+    ferritin = models.FloatField(verbose_name='ферритин')
+    transferrin = models.FloatField(verbose_name='трансферрин')
+    TIBC = models.FloatField(verbose_name='TIBC')
+    fe = models.FloatField(verbose_name='железо')
+    B9 = models.FloatField(verbose_name='витамин B9')
+    B12 = models.FloatField(verbose_name='витамин B12')
+    total_bilirubin = models.FloatField(verbose_name='общий билирубин')
+    LDH = models.FloatField(verbose_name='ЛДГ')
 
     class Meta:
         verbose_name = 'Анализ'
         verbose_name_plural = 'Анализы'
 
-
-class AnalysisResult(models.Model):
-    analysis = models.ForeignKey(Analysis, on_delete=models.CASCADE, verbose_name='анализ', related_name='results')
-    parameter = models.ForeignKey(NormalParameter, on_delete=models.CASCADE, verbose_name='параметр', related_name='results')
-    result = models.IntegerField(verbose_name='результат')
-
-    class Meta:
-        verbose_name = 'Показатель анализа'
-        verbose_name_plural = 'Показатели анализа'
-
-
-class Diagnosis(models.Model):
-    name = models.CharField(max_length=250, verbose_name='диагноз')
-
-
-class DiagnosisByAnalysis(models.Model):
-    analysis = models.ForeignKey(Analysis, on_delete=models.CASCADE, verbose_name='анализ', related_name='diagnoses')
-    diagnosis = models.ForeignKey(Diagnosis, on_delete=models.CASCADE, verbose_name='диагноз', related_name='diagnoses')
+    def __str__(self):
+        return self.full_name
