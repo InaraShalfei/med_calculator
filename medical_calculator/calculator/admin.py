@@ -9,7 +9,7 @@ class NormalParameterAdmin(admin.ModelAdmin):
 
 
 class ExaminationAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'diagnosis', 'diagnosis_date', 'RBC', 'HGB', 'HCT', 'MCV', 'MCH', 'MCHC', 'RDW_CV', 'RDW_SD',
+    list_display = ('full_name', 'diagnosis', 'readable_date', 'RBC', 'HGB', 'HCT', 'MCV', 'MCH', 'MCHC', 'RDW_CV', 'RDW_SD',
                     'ferritin', 'transferrin', 'TIBC', 'fe', 'B9', 'B12', 'total_bilirubin', 'LDH')
     empty_value_display = '-пусто-'
 
