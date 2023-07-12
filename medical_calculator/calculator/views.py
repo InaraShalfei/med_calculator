@@ -27,7 +27,7 @@ def get_normatives():
         'B12': NormalParameter.objects.get(name='B12'),
         'total_bilirubin': NormalParameter.objects.get(name='total_bilirubin'),
         'LDH': NormalParameter.objects.get(name='LDH'),
-        'homocystein': NormalParameter.objects.get(name='homocystein'),
+        'homocystein': NormalParameter.objects.get(name='homocystein')
     }
     return normatives_dict
 
@@ -44,7 +44,7 @@ def is_anemia_1(examination: Examination) -> bool:
             normatives['RDW_SD'].is_normal(examination.RDW_SD) and
             normatives['TIBC'].is_normal(examination.TIBC) and
             normatives['transferrin'].is_normal(examination.transferrin) and
-            normatives['ferritin'].is_normal_or_low(examination.ferritin) and
+            normatives['ferritin'].is_equal_to_low_or_lower(examination.ferritin) and
             normatives['fe'].is_low(examination.fe)):
         return True
 
@@ -53,13 +53,13 @@ def is_anemia_2(examination: Examination) -> bool:
     normatives = get_normatives()
     if (normatives['RBC'].is_normal_or_low(examination.RBC) and
             normatives['HGB'].is_low(examination.HGB) and
-            normatives['HCT'].is_normal_or_low(examination.HCT) and
-            normatives['MCV'].is_normal_or_low(examination.MCV) and
-            normatives['MCH'].is_normal_or_low(examination.MCH) and
-            normatives['МСНС'].is_normal_or_low(examination.MCHC) and
+            normatives['HCT'].is_equal_to_low_or_lower(examination.HCT) and
+            normatives['MCV'].is_equal_to_low_or_lower(examination.MCV) and
+            normatives['MCH'].is_equal_to_low_or_lower(examination.MCH) and
+            normatives['МСНС'].is_equal_to_low_or_lower(examination.MCHC) and
             normatives['RDW_CV'].is_normal_or_high(examination.RDW_CV) and
             normatives['RDW_SD'].is_normal(examination.RDW_SD) and
-            normatives['ferritin'].is_normal_or_low(examination.ferritin) and
+            normatives['ferritin'].is_equal_to_low_or_lower(examination.ferritin) and
             normatives['fe'].is_low(examination.fe) and
             normatives['transferrin'].is_normal_or_high(examination.transferrin) and
             normatives['TIBC'].is_high(examination.TIBC) and
@@ -75,7 +75,7 @@ def is_anemia_3(examination: Examination) -> bool:
             normatives['HCT'].is_low(examination.HCT) and
             normatives['MCV'].is_low(examination.MCV) and
             normatives['MCH'].is_low(examination.MCH) and
-            normatives['МСНС'].is_normal_or_low(examination.MCHC) and
+            normatives['МСНС'].is_equal_to_low_or_lower(examination.MCHC) and
             normatives['RDW_CV'].is_normal_or_high(examination.RDW_CV) and
             normatives['RDW_SD'].is_normal_or_high(examination.RDW_SD) and
             normatives['ferritin'].is_low(examination.ferritin) and
@@ -83,16 +83,16 @@ def is_anemia_3(examination: Examination) -> bool:
             normatives['transferrin'].is_normal_or_high(examination.transferrin) and
             normatives['TIBC'].is_high(examination.TIBC) and
             normatives['total_bilirubin'].is_normal_or_high(examination.total_bilirubin) and
-            normatives['В9'].is_normal(examination.B9) and
-            normatives['B12'].is_normal(examination.B12)):
+            normatives['В9'].is_equal_to_low_or_lower(examination.B9) and
+            normatives['B12'].is_equal_to_low_or_lower(examination.B12)):
         return True
 
 
 def is_anemia_B9(examination: Examination) -> bool:
     normatives = get_normatives()
-    if (normatives['RBC'].is_normal_or_low(examination.RBC) and
-            normatives['HGB'].is_normal_or_low(examination.HGB) and
-            normatives['MCV'].is_normal_or_high(examination.MCV) and
+    if (normatives['RBC'].is_equal_to_low_or_lower(examination.RBC) and
+            normatives['HGB'].is_low(examination.HGB) and
+            normatives['MCV'].is_normal_or_high(examination.MCV) and #check
             normatives['MCH'].is_normal_or_low(examination.MCH) and
             normatives['МСНС'].is_normal_or_low(examination.MCHC) and
             normatives['ferritin'].is_low(examination.ferritin) and
@@ -102,14 +102,14 @@ def is_anemia_B9(examination: Examination) -> bool:
             normatives['total_bilirubin'].is_normal_or_high(examination.total_bilirubin) and
             normatives['TIBC'].is_normal_or_low(examination.TIBC) and
             normatives['homocystein'].is_high(examination.homocystein) and
-            normatives['В9'].is_normal_or_low(examination.B9) and
-            normatives['B12'].is_normal_or_low(examination.B12)):
+            examination.B9 <= 8.0 and
+            normatives['B12'].is_normal(examination.B12)):
         return True
 
 
 def is_anemia_B12(examination: Examination) -> bool:
     normatives = get_normatives()
-    if (normatives['RBC'].is_normal_or_low(examination.RBC) and
+    if (normatives['RBC'].is_equal_to_low_or_lower(examination.RBC) and
             normatives['HGB'].is_low(examination.HGB) and
             normatives['MCV'].is_normal_or_high(examination.MCV) and
             normatives['MCH'].is_normal_or_low(examination.MCH) and
@@ -119,7 +119,7 @@ def is_anemia_B12(examination: Examination) -> bool:
             normatives['transferrin'].is_normal_or_low(examination.transferrin) and
             normatives['total_bilirubin'].is_normal(examination.total_bilirubin) and
             normatives['LDH'].is_high(examination.LDH) and
-            normatives['TIBC'].is_normal_or_low(examination.TIBC) and
+            normatives['TIBC'].is_equal_to_low_or_lower(examination.TIBC) and
             normatives['homocystein'].is_high(examination.homocystein) and
             normatives['В9'].is_normal(examination.B9) and
             normatives['B12'].is_low(examination.B12)):
@@ -130,7 +130,7 @@ def is_autoimmune_anemia(examination: Examination) -> bool:
     normatives = get_normatives()
     if (normatives['RBC'].is_low(examination.RBC) and
             normatives['HGB'].is_low(examination.HGB) and
-            normatives['HCT'].is_normal_or_low(examination.HCT) and
+            normatives['HCT'].is_equal_to_low_or_lower(examination.HCT) and
             normatives['MCV'].is_normal_or_high(examination.MCV) and
             normatives['MCH'].is_normal_or_low(examination.MCH) and
             normatives['МСНС'].is_normal_or_high(examination.MCHC) and
@@ -139,8 +139,8 @@ def is_autoimmune_anemia(examination: Examination) -> bool:
             normatives['transferrin'].is_normal_or_high(examination.transferrin) and
             normatives['TIBC'].is_high(examination.TIBC) and
             normatives['total_bilirubin'].is_high(examination.total_bilirubin) and
-    #TODO Прямая реакция  Кумбса
-            normatives['LDH'].is_high(examination.LDH)):
+            normatives['LDH'].is_high(examination.LDH) and
+            examination.direct_antiglobulin_test == 'Положительная'):
         return True
 
 
@@ -182,7 +182,9 @@ def handle_results(request):
             B12=request_data['B12'] if 'B12' in request_data else None,
             total_bilirubin=request_data['total_bilirubin'] if 'total_bilirubin' in request_data else None,
             LDH=request_data['LDH'] if 'LDH' in request_data else None,
-            homocystein=request_data['homocystein'] if 'homocystein' in request_data else None
+            homocystein=request_data['homocystein'] if 'homocystein' in request_data else None,
+            direct_antiglobulin_test=request_data[
+                'direct_antiglobulin_test'] if 'direct_antiglobulin_test' in request_data else None
         )
         examination = Examination.objects.filter(existing_examination_condition).get()
     else:
@@ -204,7 +206,10 @@ def handle_results(request):
             B12=request_data['B12'] if 'B12' in request_data else None,
             total_bilirubin=request_data['total_bilirubin'] if 'total_bilirubin' in request_data else None,
             LDH=request_data['LDH'] if 'LDH' in request_data else None,
-            homocystein=request_data['homocystein'] if 'homocystein' in request_data else None)
+            homocystein=request_data['homocystein'] if 'homocystein' in request_data else None,
+            direct_antiglobulin_test=request_data[
+                'direct_antiglobulin_test'] if 'direct_antiglobulin_test' in request_data else None
+        )
 
     diagnosis = get_diagnoses(examination)
     examination.diagnosis = ', '.join(diagnosis)
