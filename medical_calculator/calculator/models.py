@@ -30,6 +30,9 @@ class NormalParameter(models.Model):
     def is_low(self, value):
         return value < self.low_limit
 
+    def is_high(self, value):
+        return value > self.high_limit
+
 
 class Examination(models.Model):
     full_name = models.CharField(max_length=250, verbose_name='ФИО пациента')

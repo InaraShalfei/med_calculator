@@ -45,7 +45,22 @@ def is_anemia_1(examination: Examination) -> bool:
 
 
 def is_anemia_2(examination: Examination) -> bool:
-    pass
+    normatives = get_normatives()
+    if (normatives['RBC'].is_normal_or_low(examination.RBC) and
+            normatives['HGB'].is_low(examination.HGB) and
+            normatives['HCT'].is_normal_or_low(examination.HCT) and
+            normatives['MCV'].is_normal_or_low(examination.MCV) and
+            normatives['MCH'].is_normal_or_low(examination.MCH) and
+            normatives['МСНС'].is_normal_or_low(examination.MCHC) and
+            normatives['RDW_CV'].is_normal_or_high(examination.RDW_CV) and
+            normatives['RDW_SD'].is_normal(examination.RDW_SD) and
+            normatives['ferritin'].is_normal_or_low(examination.ferritin) and
+        normatives['fe'].is_low(examination.fe) and
+            normatives['transferrin'].is_normal_or_high(examination.transferrin) and
+            normatives['TIBC'].is_high(examination.TIBC) and
+            normatives['В9'].is_normal(examination.B9) and
+            normatives['B12'].is_normal(examination.B12)):
+        return True
 
 
 def get_diagnosises(examination:Examination) -> List:
