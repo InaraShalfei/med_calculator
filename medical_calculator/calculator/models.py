@@ -18,6 +18,18 @@ class NormalParameter(models.Model):
     def __str__(self):
         return self.name
 
+    def is_normal(self, value):
+        return self.low_limit <= value <= self.high_limit
+
+    def is_normal_or_high(self, value):
+        return value >= self.low_limit
+
+    def is_normal_or_low(self, value):
+        return value <= self.low_limit
+
+    def is_low(self, value):
+        return value < self.low_limit
+
 
 class Examination(models.Model):
     full_name = models.CharField(max_length=250, verbose_name='ФИО пациента')
