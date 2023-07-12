@@ -24,7 +24,10 @@ def get_normatives():
         'ferritin': NormalParameter.objects.get(name='ferritin'),
         'fe': NormalParameter.objects.get(name='fe'),
         'В9': NormalParameter.objects.get(name='В9'),
-        'В12': NormalParameter.objects.get(name='В12')
+        'В12': NormalParameter.objects.get(name='В12'),
+        'total_bilirubin': NormalParameter.objects.get(name='total_bilirubin'),
+        'LDH': NormalParameter.objects.get(name='LDH'),
+        'homocystein': NormalParameter.objects.get(name='homocystein'),
     }
     return normatives_dict
 
@@ -85,11 +88,31 @@ def is_anemia_3(examination: Examination) -> bool:
         return True
 
 
+def is_anemia_B9(examination: Examination) -> bool:
+    normatives = get_normatives()
+    if (normatives['RBC'].is_normal_or_low(examination.RBC) and
+            normatives['HGB'].is_normal_or_low(examination.HGB) and
+            normatives['MCV'].is_normal_or_high(examination.MCV) and
+            normatives['MCH'].is_normal_or_low(examination.MCH) and
+            normatives['МСНС'].is_normal_or_low(examination.MCHC) and
+            normatives['ferritin'].is_low(examination.ferritin) and
+            normatives['fe'].is_low(examination.fe) and
+            normatives['transferrin'].is_normal_or_high(examination.transferrin) and
+            normatives['LDH'].is_normal_or_high(examination.LDH) and
+            normatives['total_bilirubin'].is_normal_or_high(examination.total_bilirubin) and
+            normatives['TIBC'].is_normal_or_low(examination.TIBC) and
+            normatives['homocystein'].is_high(examination.homocystein) and
+            normatives['В9'].is_normal_or_low(examination.B9) and
+            normatives['B12'].is_normal_or_low(examination.B12)):
+        return True
+
+
 def get_diagnosises(examination:Examination) -> List:
     diagnoses_callbacks = {
         is_anemia_1: '1 степень железодефицитной анемии',
         is_anemia_2: '2 степень железодефицитной анемии',
-        is_anemia_3: '3 степень железодефицитной анемии'
+        is_anemia_3: '3 степень железодефицитной анемии',
+        is_anemia_B9: 'В9 дефицитная анемия'
     }
 
     diagnoses = []
