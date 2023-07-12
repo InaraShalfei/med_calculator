@@ -54,6 +54,7 @@ class Examination(models.Model):
     B12 = models.FloatField(verbose_name='витамин B12', blank=True, null=True)
     total_bilirubin = models.FloatField(verbose_name='общий билирубин', blank=True, null=True)
     LDH = models.FloatField(verbose_name='ЛДГ', blank=True, null=True)
+    homocystein = models.FloatField(verbose_name=' гомоцистеин', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Анализ'
