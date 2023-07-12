@@ -31,7 +31,7 @@ class NormalParameter(models.Model):
     def is_normal_or_low(self, value):
         if value is None:
             return True
-        return value <= self.low_limit
+        return value <= self.high_limit
 
     def is_low(self, value):
         if value is None:
@@ -42,6 +42,11 @@ class NormalParameter(models.Model):
         if value is None:
             return True
         return value > self.high_limit
+
+    def is_equal_to_low_or_lower(self, value):
+        if value is None:
+            return True
+        return value <= self.low_limit
 
 
 class Examination(models.Model):
@@ -65,6 +70,7 @@ class Examination(models.Model):
     total_bilirubin = models.FloatField(verbose_name='общий билирубин', blank=True, null=True)
     LDH = models.FloatField(verbose_name='ЛДГ', blank=True, null=True)
     homocystein = models.FloatField(verbose_name=' гомоцистеин', blank=True, null=True)
+    direct_antiglobulin_test = models.CharField(max_length=200, blank=True, null=True, verbose_name='прямая реакция  Кумбса')
 
     class Meta:
         verbose_name = 'Анализ'
