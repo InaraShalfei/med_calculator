@@ -23,6 +23,8 @@ def get_normatives():
         'transferrin': NormalParameter.objects.get(name='transferrin'),
         'ferritin': NormalParameter.objects.get(name='ferritin'),
         'fe': NormalParameter.objects.get(name='fe'),
+        'В9': NormalParameter.objects.get(name='В9'),
+        'В12': NormalParameter.objects.get(name='В12')
     }
     return normatives_dict
 
@@ -55,9 +57,29 @@ def is_anemia_2(examination: Examination) -> bool:
             normatives['RDW_CV'].is_normal_or_high(examination.RDW_CV) and
             normatives['RDW_SD'].is_normal(examination.RDW_SD) and
             normatives['ferritin'].is_normal_or_low(examination.ferritin) and
-        normatives['fe'].is_low(examination.fe) and
+            normatives['fe'].is_low(examination.fe) and
             normatives['transferrin'].is_normal_or_high(examination.transferrin) and
             normatives['TIBC'].is_high(examination.TIBC) and
+            normatives['В9'].is_normal(examination.B9) and
+            normatives['B12'].is_normal(examination.B12)):
+        return True
+
+
+def is_anemia_3(examination: Examination) -> bool:
+    normatives = get_normatives()
+    if (normatives['RBC'].is_low(examination.RBC) and
+            normatives['HGB'].is_low(examination.HGB) and
+            normatives['HCT'].is_low(examination.HCT) and
+            normatives['MCV'].is_low(examination.MCV) and
+            normatives['MCH'].is_low(examination.MCH) and
+            normatives['МСНС'].is_normal_or_low(examination.MCHC) and
+            normatives['RDW_CV'].is_normal_or_high(examination.RDW_CV) and
+            normatives['RDW_SD'].is_normal_or_high(examination.RDW_SD) and
+            normatives['ferritin'].is_low(examination.ferritin) and
+            normatives['fe'].is_low(examination.fe) and
+            normatives['transferrin'].is_normal_or_high(examination.transferrin) and
+            normatives['TIBC'].is_high(examination.TIBC) and
+            normatives['total_bilirubin'].is_normal_or_high(examination.total_bilirubin) and
             normatives['В9'].is_normal(examination.B9) and
             normatives['B12'].is_normal(examination.B12)):
         return True
@@ -67,6 +89,7 @@ def get_diagnosises(examination:Examination) -> List:
     diagnoses_callbacks = {
         is_anemia_1: '1 степень железодефицитной анемии',
         is_anemia_2: '2 степень железодефицитной анемии',
+        is_anemia_3: '3 степень железодефицитной анемии'
     }
 
     diagnoses = []
