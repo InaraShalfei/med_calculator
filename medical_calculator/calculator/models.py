@@ -19,18 +19,28 @@ class NormalParameter(models.Model):
         return self.name
 
     def is_normal(self, value):
+        if value is None:
+            return True
         return self.low_limit <= value <= self.high_limit
 
     def is_normal_or_high(self, value):
+        if value is None:
+            return True
         return value >= self.low_limit
 
     def is_normal_or_low(self, value):
+        if value is None:
+            return True
         return value <= self.low_limit
 
     def is_low(self, value):
+        if value is None:
+            return True
         return value < self.low_limit
 
     def is_high(self, value):
+        if value is None:
+            return True
         return value > self.high_limit
 
 
