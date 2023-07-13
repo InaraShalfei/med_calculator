@@ -143,6 +143,7 @@ def is_autoimmune_anemia(examination: Examination) -> bool:
             examination.direct_antiglobulin_test == 'Положительная'):
         return True
 
+
 def is_normal_health(examination:Examination) -> bool:
     normatives = get_normatives()
     if (normatives['RBC'].is_normal(examination.RBC) and
@@ -235,12 +236,10 @@ def handle_results(request):
         )
 
     diagnosis = get_diagnoses(examination)
-    examination.diagnosis = ', '.join(diagnosis)
+    if diagnosis:
+        examination.diagnosis = ', '.join(diagnosis)
+    else:
+        examination.diagnosis = 'Невозможно диагностировать ваш случай. Обратитесь к гематологу'
     examination.save()
 
-
     return HttpResponse(examination.diagnosis)
-
-
-
-
