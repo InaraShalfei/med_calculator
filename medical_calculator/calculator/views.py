@@ -143,6 +143,28 @@ def is_autoimmune_anemia(examination: Examination) -> bool:
             examination.direct_antiglobulin_test == 'Положительная'):
         return True
 
+def is_normal_health(examination:Examination) -> bool:
+    normatives = get_normatives()
+    if (normatives['RBC'].is_normal(examination.RBC) and
+            normatives['HGB'].is_normal(examination.HGB) and
+            normatives['HCT'].is_normal(examination.HCT) and
+            normatives['MCV'].is_normal(examination.MCV) and
+            normatives['MCH'].is_normal(examination.MCH) and
+            normatives['МСНС'].is_normal(examination.MCHC) and
+            normatives['RDW_SD'].is_normal(examination.RDW_SD) and
+            normatives['RDW_CV'].is_normal(examination.RDW_CV) and
+            normatives['ferritin'].is_normal(examination.ferritin) and
+            normatives['fe'].is_normal(examination.fe) and
+            normatives['transferrin'].is_normal(examination.transferrin) and
+            normatives['В9'].is_normal(examination.B9) and
+            normatives['В12'].is_normal(examination.B12) and
+            normatives['TIBC'].is_normal(examination.TIBC) and
+            normatives['total_bilirubin'].is_normal(examination.total_bilirubin) and
+            normatives['LDH'].is_normal(examination.LDH) and
+            normatives['homocystein'].is_normal(examination.homocystein) and
+            examination.direct_antiglobulin_test == 'Отрицательная'):
+        return True
+
 
 def get_diagnoses(examination:Examination) -> List:
     diagnoses_callbacks = {
@@ -151,7 +173,8 @@ def get_diagnoses(examination:Examination) -> List:
         is_anemia_3: '3 степень железодефицитной анемии',
         is_anemia_B9: 'В9 дефицитная анемия',
         is_anemia_B12: 'В12 дефицитная анемия',
-        is_autoimmune_anemia: 'Аутоиммунная гемолитическая анемия '
+        is_autoimmune_anemia: 'Аутоиммунная гемолитическая анемия',
+        is_normal_health: 'У вас нет признаков анемии, вы здоровы'
     }
 
     diagnoses = []
