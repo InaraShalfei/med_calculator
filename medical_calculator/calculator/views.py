@@ -144,7 +144,7 @@ def is_autoimmune_anemia(examination: Examination) -> bool:
         return True
 
 
-def is_normal_health(examination:Examination) -> bool:
+def is_normal_health(examination: Examination) -> bool:
     normatives = get_normatives()
     if (normatives['RBC'].is_normal(examination.RBC) and
             normatives['HGB'].is_normal(examination.HGB) and
@@ -158,7 +158,7 @@ def is_normal_health(examination:Examination) -> bool:
             normatives['fe'].is_normal(examination.fe) and
             normatives['transferrin'].is_normal(examination.transferrin) and
             normatives['В9'].is_normal(examination.B9) and
-            normatives['В12'].is_normal(examination.B12) and
+            normatives['B12'].is_normal(examination.B12) and
             normatives['TIBC'].is_normal(examination.TIBC) and
             normatives['total_bilirubin'].is_normal(examination.total_bilirubin) and
             normatives['LDH'].is_normal(examination.LDH) and
