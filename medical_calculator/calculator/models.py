@@ -50,6 +50,10 @@ class NormalParameter(models.Model):
 
 
 class Examination(models.Model):
+    ANTIGLOBULIN_TEST_CHOICES = [
+        ('POS', 'Положительная'),
+        ('NEG', 'Отрицательная')
+    ]
     full_name = models.CharField(max_length=250, verbose_name='ФИО пациента')
     diagnosis = models.CharField(max_length=250, blank=True, null=True, verbose_name='диагноз')
     diagnosis_date = models.DateField(auto_now=True, verbose_name='дата диагноза')
@@ -70,7 +74,8 @@ class Examination(models.Model):
     total_bilirubin = models.FloatField(verbose_name='общий билирубин', blank=True, null=True)
     LDH = models.FloatField(verbose_name='ЛДГ', blank=True, null=True)
     homocystein = models.FloatField(verbose_name=' гомоцистеин', blank=True, null=True)
-    direct_antiglobulin_test = models.CharField(max_length=200, blank=True, null=True, verbose_name='прямая реакция  Кумбса')
+    direct_antiglobulin_test = models.CharField(max_length=3, choices=ANTIGLOBULIN_TEST_CHOICES, blank=True, null=True,
+                                                verbose_name='прямая реакция  Кумбса')
 
     class Meta:
         verbose_name = 'Анализ'
