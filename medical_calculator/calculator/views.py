@@ -239,7 +239,7 @@ def handle_results(request):
     if diagnosis:
         examination.diagnosis = ', '.join(diagnosis)
     else:
-        examination.diagnosis = 'Невозможно диагностировать ваш случай. Обратитесь к гематологу'
+        examination.diagnosis = 'Невозможно диагностировать ваш случай. Рекомендуем обратиться к гематологу'
     examination.save()
 
     return HttpResponse(examination.diagnosis)
