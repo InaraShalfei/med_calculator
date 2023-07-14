@@ -134,7 +134,7 @@ def is_anemia_B9(examination: Examination) -> (bool, List):
     return False, []
 
 
-def is_anemia_B12(examination: Examination) -> bool:
+def is_anemia_B12(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_equal_to_low_or_lower(examination.RBC) and
             normatives['HGB'].is_low(examination.HGB) and
@@ -142,15 +142,22 @@ def is_anemia_B12(examination: Examination) -> bool:
             normatives['MCH'].is_normal_or_low(examination.MCH) and
             normatives['МСНС'].is_normal_or_low(examination.MCHC) and
             normatives['ferritin'].is_low(examination.ferritin) and
-            normatives['fe'].is_low(examination.fe) and
-            normatives['transferrin'].is_normal_or_low(examination.transferrin) and
+            normatives['fe'].is_low(examination.fe)):
+        additional_parameters = ["TIBC", "transferrin", "B9", "B12", "total_bilirubin", "LDH", "homocystein"]
+        for parameter in additional_parameters:
+            if getattr(examination, parameter, None) is None:
+                return None, additional_parameters
+
+        if (normatives['transferrin'].is_normal_or_low(examination.transferrin) and
             normatives['total_bilirubin'].is_normal(examination.total_bilirubin) and
             normatives['LDH'].is_high(examination.LDH) and
             normatives['TIBC'].is_equal_to_low_or_lower(examination.TIBC) and
             normatives['homocystein'].is_high(examination.homocystein) and
             normatives['В9'].is_normal(examination.B9) and
             normatives['B12'].is_low(examination.B12)):
-        return True
+            return True, []
+
+    return False, []
 
 
 def is_autoimmune_anemia(examination: Examination) -> bool:
