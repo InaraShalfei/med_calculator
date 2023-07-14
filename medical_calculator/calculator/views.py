@@ -55,7 +55,7 @@ def is_anemia_1(examination: Examination) -> (bool, List):
     return False, []
 
 
-def is_anemia_2(examination: Examination) -> bool:
+def is_anemia_2(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_normal_or_low(examination.RBC) and
             normatives['HGB'].is_low(examination.HGB) and
@@ -66,15 +66,22 @@ def is_anemia_2(examination: Examination) -> bool:
             normatives['RDW_CV'].is_normal_or_high(examination.RDW_CV) and
             normatives['RDW_SD'].is_normal(examination.RDW_SD) and
             normatives['ferritin'].is_equal_to_low_or_lower(examination.ferritin) and
-            normatives['fe'].is_low(examination.fe) and
-            normatives['transferrin'].is_normal_or_high(examination.transferrin) and
+            normatives['fe'].is_low(examination.fe)):
+        additional_parameters = ["TIBC", "transferrin", "B9", "B12"]
+        for parameter in additional_parameters:
+            if getattr(examination, parameter, None) is None:
+                return None, additional_parameters
+
+        if (normatives['transferrin'].is_normal_or_high(examination.transferrin) and
             normatives['TIBC'].is_high(examination.TIBC) and
             normatives['В9'].is_normal(examination.B9) and
             normatives['B12'].is_normal(examination.B12)):
-        return True
+            return True, []
+
+    return False, []
 
 
-def is_anemia_3(examination: Examination) -> bool:
+def is_anemia_3(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_low(examination.RBC) and
             normatives['HGB'].is_low(examination.HGB) and
@@ -85,32 +92,46 @@ def is_anemia_3(examination: Examination) -> bool:
             normatives['RDW_CV'].is_normal_or_high(examination.RDW_CV) and
             normatives['RDW_SD'].is_normal_or_high(examination.RDW_SD) and
             normatives['ferritin'].is_low(examination.ferritin) and
-            normatives['fe'].is_low(examination.fe) and
-            normatives['transferrin'].is_normal_or_high(examination.transferrin) and
+            normatives['fe'].is_low(examination.fe)):
+        additional_parameters = ["TIBC", "transferrin", "B9", "B12", "total_bilirubin"]
+        for parameter in additional_parameters:
+            if getattr(examination, parameter, None) is None:
+                return None, additional_parameters
+
+        if (normatives['transferrin'].is_normal_or_high(examination.transferrin) and
             normatives['TIBC'].is_high(examination.TIBC) and
             normatives['total_bilirubin'].is_normal_or_high(examination.total_bilirubin) and
             normatives['В9'].is_equal_to_low_or_lower(examination.B9) and
             normatives['B12'].is_equal_to_low_or_lower(examination.B12)):
-        return True
+            return True, []
+
+    return False, []
 
 
-def is_anemia_B9(examination: Examination) -> bool:
+def is_anemia_B9(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_equal_to_low_or_lower(examination.RBC) and
             normatives['HGB'].is_low(examination.HGB) and
-            normatives['MCV'].is_normal_or_high(examination.MCV) and #check
+            normatives['MCV'].is_normal_or_high(examination.MCV) and
             normatives['MCH'].is_normal_or_low(examination.MCH) and
             normatives['МСНС'].is_normal_or_low(examination.MCHC) and
             normatives['ferritin'].is_low(examination.ferritin) and
-            normatives['fe'].is_low(examination.fe) and
-            normatives['transferrin'].is_normal_or_high(examination.transferrin) and
+            normatives['fe'].is_low(examination.fe)):
+        additional_parameters = ["TIBC", "transferrin", "B9", "B12", "total_bilirubin", "LDH", "homocystein"]
+        for parameter in additional_parameters:
+            if getattr(examination, parameter, None) is None:
+                return None, additional_parameters
+
+        if (normatives['transferrin'].is_normal_or_high(examination.transferrin) and
             normatives['LDH'].is_normal_or_high(examination.LDH) and
             normatives['total_bilirubin'].is_normal_or_high(examination.total_bilirubin) and
             normatives['TIBC'].is_normal_or_low(examination.TIBC) and
             normatives['homocystein'].is_high(examination.homocystein) and
             examination.B9 <= 8.0 and
             normatives['B12'].is_normal(examination.B12)):
-        return True
+            return True, []
+
+    return False, []
 
 
 def is_anemia_B12(examination: Examination) -> bool:
@@ -168,7 +189,7 @@ def is_normal_health(examination: Examination) -> bool:
 def get_diagnoses(examination: Examination) -> (List, List):
     diagnoses_callbacks = {
         is_anemia_1: "1 степень железодефицитной анемии",
-        # is_anemia_2: '2 степень железодефицитной анемии',
+        is_anemia_2: "2 степень железодефицитной анемии",
         # is_anemia_3: '3 степень железодефицитной анемии',
         # is_anemia_B9: 'В9 дефицитная анемия',
         # is_anemia_B12: 'В12 дефицитная анемия',
