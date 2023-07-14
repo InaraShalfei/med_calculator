@@ -57,8 +57,8 @@ def is_anemia_1(examination: Examination) -> (bool, List):
 
 def is_anemia_2(examination: Examination) -> (bool, List):
     normatives = get_normatives()
-    if (normatives['RBC'].is_normal_or_low(examination.RBC) and
-            normatives['HGB'].is_low(examination.HGB) and
+    if ((normatives['RBC'].is_normal(examination.RBC) or 3.5 <= examination.RBC <= 3.9) and
+            70 <= examination.HGB <= 119 and
             normatives['HCT'].is_equal_to_low_or_lower(examination.HCT) and
             normatives['MCV'].is_equal_to_low_or_lower(examination.MCV) and
             normatives['MCH'].is_equal_to_low_or_lower(examination.MCH) and
@@ -83,7 +83,7 @@ def is_anemia_2(examination: Examination) -> (bool, List):
 
 def is_anemia_3(examination: Examination) -> (bool, List):
     normatives = get_normatives()
-    if (normatives['RBC'].is_low(examination.RBC) and
+    if (examination.RBC < 3.5 and
             normatives['HGB'].is_low(examination.HGB) and
             normatives['HCT'].is_low(examination.HCT) and
             normatives['MCV'].is_low(examination.MCV) and
@@ -282,5 +282,5 @@ def handle_results(request):
 
     return JsonResponse({
         "diagnoses": diagnosis,
-        "additional_parameters": need_to_ask
+        "additional_parameters": [value for value in need_to_ask if getattr(examination, value, None) is None]
     })
