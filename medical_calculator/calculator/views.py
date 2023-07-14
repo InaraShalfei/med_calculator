@@ -185,7 +185,7 @@ def is_autoimmune_anemia(examination: Examination) -> (bool, List):
     return False, []
 
 
-def is_normal_health(examination: Examination) -> bool:
+def is_normal_health(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_normal(examination.RBC) and
             normatives['HGB'].is_normal(examination.HGB) and
@@ -197,18 +197,19 @@ def is_normal_health(examination: Examination) -> bool:
             normatives['RDW_CV'].is_normal(examination.RDW_CV) and
             normatives['ferritin'].is_normal(examination.ferritin) and
             normatives['fe'].is_normal(examination.fe)):
-        return True
+        return True, []
+    return False, []
 
 
 def get_diagnoses(examination: Examination) -> (List, List):
     diagnoses_callbacks = {
         is_anemia_1: "1 степень железодефицитной анемии",
         is_anemia_2: "2 степень железодефицитной анемии",
-        # is_anemia_3: '3 степень железодефицитной анемии',
-        # is_anemia_B9: 'В9 дефицитная анемия',
-        # is_anemia_B12: 'В12 дефицитная анемия',
-        # is_autoimmune_anemia: 'Аутоиммунная гемолитическая анемия',
-        # is_normal_health: 'У вас нет признаков анемии, вы здоровы'
+        is_anemia_3: '3 степень железодефицитной анемии',
+        is_anemia_B9: 'В9 дефицитная анемия',
+        is_anemia_B12: 'В12 дефицитная анемия',
+        is_autoimmune_anemia: 'Аутоиммунная гемолитическая анемия',
+        is_normal_health: 'У вас нет признаков анемии, вы здоровы'
     }
 
     diagnoses = []
