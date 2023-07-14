@@ -3,7 +3,7 @@ import json
 from typing import List
 
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 from .models import Examination, NormalParameter
 from django.db.models import Q
@@ -32,7 +32,7 @@ def get_normatives():
     return normatives_dict
 
 
-def is_anemia_1(examination: Examination) -> bool:
+def is_anemia_1(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_normal_or_high(examination.RBC) and
             normatives['HGB'].is_normal(examination.HGB) and
@@ -42,11 +42,17 @@ def is_anemia_1(examination: Examination) -> bool:
             normatives['МСНС'].is_normal(examination.MCHC) and
             normatives['RDW_CV'].is_normal(examination.RDW_CV) and
             normatives['RDW_SD'].is_normal(examination.RDW_SD) and
-            normatives['TIBC'].is_normal(examination.TIBC) and
-            normatives['transferrin'].is_normal(examination.transferrin) and
             normatives['ferritin'].is_equal_to_low_or_lower(examination.ferritin) and
             normatives['fe'].is_low(examination.fe)):
-        return True
+        additional_parameters = ["TIBC", "transferrin"]
+        for parameter in additional_parameters:
+            if getattr(examination, parameter, None) is None:
+                return None, additional_parameters
+
+        if normatives['TIBC'].is_normal(examination.TIBC) and normatives['transferrin'].is_normal(examination.transferrin):
+            return True, []
+
+    return False, []
 
 
 def is_anemia_2(examination: Examination) -> bool:
@@ -159,22 +165,26 @@ def is_normal_health(examination: Examination) -> bool:
         return True
 
 
-def get_diagnoses(examination:Examination) -> List:
+def get_diagnoses(examination: Examination) -> (List, List):
     diagnoses_callbacks = {
-        is_anemia_1: '1 степень железодефицитной анемии',
-        is_anemia_2: '2 степень железодефицитной анемии',
-        is_anemia_3: '3 степень железодефицитной анемии',
-        is_anemia_B9: 'В9 дефицитная анемия',
-        is_anemia_B12: 'В12 дефицитная анемия',
-        is_autoimmune_anemia: 'Аутоиммунная гемолитическая анемия',
-        is_normal_health: 'У вас нет признаков анемии, вы здоровы'
+        is_anemia_1: "1 степень железодефицитной анемии",
+        # is_anemia_2: '2 степень железодефицитной анемии',
+        # is_anemia_3: '3 степень железодефицитной анемии',
+        # is_anemia_B9: 'В9 дефицитная анемия',
+        # is_anemia_B12: 'В12 дефицитная анемия',
+        # is_autoimmune_anemia: 'Аутоиммунная гемолитическая анемия',
+        # is_normal_health: 'У вас нет признаков анемии, вы здоровы'
     }
 
     diagnoses = []
+    need_to_ask = []
     for func, diagnosis in diagnoses_callbacks.items():
-        if func(examination):
+        result, additional_parameters = func(examination)
+        if result:
             diagnoses.append(diagnosis)
-    return diagnoses
+        elif len(additional_parameters):
+            need_to_ask.extend(additional_parameters)
+    return diagnoses, need_to_ask
 
 @csrf_exempt
 def handle_results(request):
@@ -227,11 +237,14 @@ def handle_results(request):
                 'direct_antiglobulin_test'] if 'direct_antiglobulin_test' in request_data else None
         )
 
-    diagnosis = get_diagnoses(examination)
+    diagnosis, need_to_ask = get_diagnoses(examination)
     if diagnosis:
         examination.diagnosis = ', '.join(diagnosis)
     else:
         examination.diagnosis = 'Невозможно диагностировать ваш случай. Рекомендуем обратиться к гематологу'
     examination.save()
 
-    return HttpResponse(examination.diagnosis)
+    return JsonResponse({
+        "diagnoses": diagnosis,
+        "additional_parameters": need_to_ask
+    })
