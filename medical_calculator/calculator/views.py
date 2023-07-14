@@ -160,7 +160,7 @@ def is_anemia_B12(examination: Examination) -> (bool, List):
     return False, []
 
 
-def is_autoimmune_anemia(examination: Examination) -> bool:
+def is_autoimmune_anemia(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_low(examination.RBC) and
             normatives['HGB'].is_low(examination.HGB) and
@@ -169,13 +169,20 @@ def is_autoimmune_anemia(examination: Examination) -> bool:
             normatives['MCH'].is_normal_or_low(examination.MCH) and
             normatives['МСНС'].is_normal_or_high(examination.MCHC) and
             normatives['ferritin'].is_normal_or_high(examination.ferritin) and
-            normatives['fe'].is_normal_or_high(examination.fe) and
-            normatives['transferrin'].is_normal_or_high(examination.transferrin) and
+            normatives['fe'].is_normal_or_high(examination.fe)):
+        additional_parameters = ["TIBC", "transferrin", "total_bilirubin", "LDH", "direct_antiglobulin_test"]
+        for parameter in additional_parameters:
+            if getattr(examination, parameter, None) is None:
+                return None, additional_parameters
+
+        if (normatives['transferrin'].is_normal_or_high(examination.transferrin) and
             normatives['TIBC'].is_high(examination.TIBC) and
             normatives['total_bilirubin'].is_high(examination.total_bilirubin) and
             normatives['LDH'].is_high(examination.LDH) and
             examination.direct_antiglobulin_test == 'Положительная'):
-        return True
+            return True, []
+
+    return False, []
 
 
 def is_normal_health(examination: Examination) -> bool:
