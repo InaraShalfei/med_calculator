@@ -155,15 +155,7 @@ def is_normal_health(examination: Examination) -> bool:
             normatives['RDW_SD'].is_normal(examination.RDW_SD) and
             normatives['RDW_CV'].is_normal(examination.RDW_CV) and
             normatives['ferritin'].is_normal(examination.ferritin) and
-            normatives['fe'].is_normal(examination.fe) and
-            normatives['transferrin'].is_normal(examination.transferrin) and
-            normatives['В9'].is_normal(examination.B9) and
-            normatives['B12'].is_normal(examination.B12) and
-            normatives['TIBC'].is_normal(examination.TIBC) and
-            normatives['total_bilirubin'].is_normal(examination.total_bilirubin) and
-            normatives['LDH'].is_normal(examination.LDH) and
-            normatives['homocystein'].is_normal(examination.homocystein) and
-            examination.direct_antiglobulin_test == 'Отрицательная'):
+            normatives['fe'].is_normal(examination.fe)):
         return True
 
 
