@@ -112,10 +112,10 @@ def is_anemia_B9(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_equal_to_low_or_lower(examination.RBC) and
             normatives['HGB'].is_low(examination.HGB) and
-            normatives['MCV'].is_normal_or_high(examination.MCV) and
+            examination.MCV > 95 and
             normatives['MCH'].is_normal_or_low(examination.MCH) and
             normatives['МСНС'].is_normal_or_low(examination.MCHC) and
-            normatives['ferritin'].is_low(examination.ferritin) and
+            examination.ferritin < 12 and
             normatives['fe'].is_low(examination.fe)):
         additional_parameters = ["TIBC", "transferrin", "B9", "B12", "total_bilirubin", "LDH", "homocystein"]
         for parameter in additional_parameters:
@@ -220,7 +220,7 @@ def get_diagnoses(examination: Examination) -> (List, List):
             diagnoses.append(diagnosis)
         elif len(additional_parameters):
             need_to_ask.extend(additional_parameters)
-    return diagnoses, need_to_ask
+    return diagnoses, list(set(need_to_ask))
 
 @csrf_exempt
 def handle_results(request):
