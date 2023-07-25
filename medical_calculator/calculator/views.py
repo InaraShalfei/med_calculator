@@ -281,6 +281,6 @@ def handle_results(request):
     examination.save()
 
     return JsonResponse({
-        "diagnoses": diagnosis,
+        "diagnoses": examination.diagnosis,
         "additional_parameters": [value for value in need_to_ask if getattr(examination, value, None) is None]
     })
