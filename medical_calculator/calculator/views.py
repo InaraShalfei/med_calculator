@@ -276,8 +276,10 @@ def handle_results(request):
     diagnosis, need_to_ask = get_diagnoses(examination)
     if diagnosis:
         examination.diagnosis = ', '.join(diagnosis)
-    else:
+    elif not len(need_to_ask):
         examination.diagnosis = 'Невозможно диагностировать ваш случай. Рекомендуем обратиться к гематологу'
+    else:
+        examination.diagnosis = ''
     examination.save()
 
     return JsonResponse({
