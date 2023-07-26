@@ -179,7 +179,7 @@ def is_autoimmune_anemia(examination: Examination) -> (bool, List):
             normatives['TIBC'].is_high(examination.TIBC) and
             normatives['total_bilirubin'].is_high(examination.total_bilirubin) and
             normatives['LDH'].is_high(examination.LDH) and
-            examination.direct_antiglobulin_test == 'Положительная'):
+            examination.direct_antiglobulin_test == 'POS'):
             return True, []
 
     return False, []
