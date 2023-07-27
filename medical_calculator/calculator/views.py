@@ -13,7 +13,6 @@ def get_normatives():
     normatives_dict = {
         'RBC': NormalParameter.objects.get(name='RBC'),
         'HGB': NormalParameter.objects.get(name='HGB'),
-        'HCT': NormalParameter.objects.get(name='HCT'),
         'MCV': NormalParameter.objects.get(name='MCV'),
         'MCH': NormalParameter.objects.get(name='MCH'),
         'МСНС': NormalParameter.objects.get(name='МСНС'),
@@ -36,7 +35,6 @@ def is_anemia_1(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_normal_or_high(examination.RBC) and
             normatives['HGB'].is_normal(examination.HGB) and
-            normatives['HCT'].is_normal(examination.HCT) and
             normatives['MCV'].is_normal(examination.MCV) and
             normatives['MCH'].is_normal(examination.MCH) and
             normatives['МСНС'].is_normal(examination.MCHC) and
@@ -59,7 +57,6 @@ def is_anemia_2(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if ((normatives['RBC'].is_normal(examination.RBC) or 3.5 <= examination.RBC <= 3.9) and
             70 <= examination.HGB <= 119 and
-            normatives['HCT'].is_equal_to_low_or_lower(examination.HCT) and
             normatives['MCV'].is_equal_to_low_or_lower(examination.MCV) and
             normatives['MCH'].is_equal_to_low_or_lower(examination.MCH) and
             normatives['МСНС'].is_equal_to_low_or_lower(examination.MCHC) and
@@ -85,7 +82,6 @@ def is_anemia_3(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (examination.RBC < 3.5 and
             normatives['HGB'].is_low(examination.HGB) and
-            normatives['HCT'].is_low(examination.HCT) and
             normatives['MCV'].is_low(examination.MCV) and
             normatives['MCH'].is_low(examination.MCH) and
             normatives['МСНС'].is_equal_to_low_or_lower(examination.MCHC) and
@@ -164,7 +160,6 @@ def is_autoimmune_anemia(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_low(examination.RBC) and
             normatives['HGB'].is_low(examination.HGB) and
-            normatives['HCT'].is_equal_to_low_or_lower(examination.HCT) and
             normatives['MCV'].is_normal_or_high(examination.MCV) and
             normatives['MCH'].is_normal_or_low(examination.MCH) and
             normatives['МСНС'].is_normal_or_high(examination.MCHC) and
@@ -189,7 +184,6 @@ def is_normal_health(examination: Examination) -> (bool, List):
     normatives = get_normatives()
     if (normatives['RBC'].is_normal(examination.RBC) and
             normatives['HGB'].is_normal(examination.HGB) and
-            normatives['HCT'].is_normal(examination.HCT) and
             normatives['MCV'].is_normal(examination.MCV) and
             normatives['MCH'].is_normal(examination.MCH) and
             normatives['МСНС'].is_normal(examination.MCHC) and
@@ -230,7 +224,6 @@ def handle_results(request):
         Examination.objects.filter(existing_examination_condition).update(
             RBC=request_data['RBC'] if 'RBC' in request_data else None,
             HGB=request_data['HGB'] if 'HGB' in request_data else None,
-            HCT=request_data['HCT'] if 'HCT' in request_data else None,
             MCV=request_data['MCV'] if 'MCV' in request_data else None,
             MCH=request_data['MCH'] if 'MCH' in request_data else None,
             MCHC=request_data['MCHC'] if 'MCHC' in request_data else None,
@@ -254,7 +247,6 @@ def handle_results(request):
             full_name=request_data['full_name'],
             RBC=request_data['RBC'] if 'RBC' in request_data else None,
             HGB=request_data['HGB'] if 'HGB' in request_data else None,
-            HCT=request_data['HCT'] if 'HCT' in request_data else None,
             MCV=request_data['MCV'] if 'MCV' in request_data else None,
             MCH=request_data['MCH'] if 'MCH' in request_data else None,
             MCHC=request_data['MCHC'] if 'MCHC' in request_data else None,
