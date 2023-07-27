@@ -59,7 +59,7 @@ def is_anemia_2(examination: Examination) -> (bool, List):
             70 <= examination.HGB <= 119 and
             normatives['MCV'].is_equal_to_low_or_lower(examination.MCV) and
             normatives['MCH'].is_equal_to_low_or_lower(examination.MCH) and
-            normatives['МСНС'].is_equal_to_low_or_lower(examination.MCHC) and
+            normatives['МСНС'].is_normal(examination.MCHC) and
             normatives['RDW_CV'].is_normal_or_high(examination.RDW_CV) and
             normatives['RDW_SD'].is_normal(examination.RDW_SD) and
             normatives['ferritin'].is_equal_to_low_or_lower(examination.ferritin) and
@@ -84,7 +84,7 @@ def is_anemia_3(examination: Examination) -> (bool, List):
             normatives['HGB'].is_low(examination.HGB) and
             normatives['MCV'].is_low(examination.MCV) and
             normatives['MCH'].is_low(examination.MCH) and
-            normatives['МСНС'].is_equal_to_low_or_lower(examination.MCHC) and
+            normatives['МСНС'].is_normal(examination.MCHC) and
             normatives['RDW_CV'].is_normal_or_high(examination.RDW_CV) and
             normatives['RDW_SD'].is_normal_or_high(examination.RDW_SD) and
             normatives['ferritin'].is_low(examination.ferritin) and
