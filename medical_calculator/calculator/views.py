@@ -60,7 +60,7 @@ def is_anemia_2(examination: Examination) -> (bool, List):
 
     if (RBC <= 5.10 and
             HGB <= 150 and
-            70 <= MCV <= 82 and
+            70 <= MCV <= 97 and
             20 <= MCH <= 34 and
             280 <= MCHC <= 350 and
             ferritin <= 12.5 and
