@@ -44,7 +44,7 @@ def is_anemia_1(examination: Examination) -> (bool, List):
             MCH >= 25 and
             MCHC >= 300 and
             ferritin <= 21 and
-            fe >= 8):
+            fe >= 5):
         return True, []
     return False, []
 
